@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hustlr - Find Jobs</title>
+        <link rel="stylesheet" href="findjobs.css">
+        <link rel="stylesheet" href="home.css">
+        <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    </head>
+    <body>
+         <div class="banner">
+            <div class="topbar">
+                <div class="icons">
+                    <i class="fa fa-instagram" aria-hidden="true"></i>
+                    <i class="fa fa-facebook-square" aria-hidden="true"></i>
+                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                    <i class="fa fa-question-circle" aria-hidden="true"></i>
+                </div>
+
+                <div class="l">
+                    <ul class="list" id="authButtons">
+                        <li><a href="login.html">Login <i class="fa fa-angle-down"></i></li></a>
+                        <li><a href="signup.html">Sign Up <i class="fa fa-angle-down"></i></li></a>
+                    </ul>
+                </div>
+                <div class="anime"></div>
+                <div class="menubar">
+                    <ul class="links">
+                        <li><a href="home.html">Home</a></li>
+                        <li><a href="findjobs.html"><fonts>Find Jobs</fonts></a></li>
+                        <li><a href="hire.html">Hire</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- login required message or job listings -->
+            <div class="container" id="job-search">
+                <div class="search-section">
+                    <h2>Find Your Dream Job</h2>
+                    <div class="search-box">
+                        <input type="text" id="jobTitle" placeholder="Job Title or Keywords">
+                        <input type="text" id="location" placeholder="Location">
+                        <select id="jobType">
+                            <option value="">Job Type</option>
+                            <option value="full-time">Full Time</option>
+                            <option value="part-time">Part Time</option>
+                            <option value="contract">Contract</option>
+                        </select>
+                        <button onclick="searchJobs()">Search</button>
+                    </div>
+                </div>
+                
+                <div class="job-listings" id="jobListings">
+                    <!-- Jobs will be added here -->
+                </div>
+
+                <!-- Login prompt for non-logged in users -->
+                <div id="loginPrompt" class="login-prompt">
+                    <h3>Want to see job listings?</h3>
+                    <p>Login or sign up to view and apply for jobs!</p>
+                    <div class="auth-buttons">
+                        <a href="login.html" class="btn">Login</a>
+                        <a href="signup.html" class="btn">Sign Up</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Application Form Modal -->
+            <div id="applicationModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <h2>Apply for <span id="jobTitleSpan"></span></h2>
+                    <form id="applicationForm">
+                        <div class="form-group">
+                            <label for="coverLetter">Cover Letter:</label>
+                            <textarea id="coverLetter" required placeholder="Explain why you want this job and why you're a good fit"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="expectedSalary">Expected Salary:</label>
+                            <input type="number" id="expectedSalary" required placeholder="Enter your expected salary">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone Number:</label>
+                            <input type="tel" id="phoneNumber" required placeholder="Enter your phone number">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="applicantLocation">Your Location:</label>
+                            <input type="text" id="applicantLocation" required placeholder="Enter your current location">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="skills">Skills (comma-separated):</label>
+                            <input type="text" id="skills" required placeholder="e.g., JavaScript, React, Node.js">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="experienceLevel">Experience Level:</label>
+                            <select id="experienceLevel" required>
+                                <option value="">Select Experience Level</option>
+                                <option value="Entry">Entry Level</option>
+                                <option value="Mid">Mid Level</option>
+                                <option value="Senior">Senior Level</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="resume">Upload CV (PDF only):</label>
+                            <input type="file" id="resume" accept=".pdf" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="videoCV">Upload Video CV (max 1 minute):</label>
+                            <input type="file" id="videoCV" accept="video/*" required>
+                            <small>Record a 1-minute video introducing yourself and why you want this job</small>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Submit Application</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // check if user is logged in
+            const token = localStorage.getItem('token');
+            const role = localStorage.getItem('role');
+            const userName = localStorage.getItem('userName');
+            
+            // update UI for logged in user
+            if (token) {
+                const authButtons = document.getElementById('authButtons');
+                const firstName = userName.split(' ')[0]; // get just the first name
+                authButtons.innerHTML = `
+                    <li><a href="#" onclick="logout()"><i class="fa fa-user-circle" aria-hidden="true"></i> ${firstName} | Logout</a></li>
+                `;
+
+                // hide login prompt if logged in
+                document.getElementById('loginPrompt').style.display = 'none';
+                // show job listings
+                document.getElementById('jobListings').style.display = 'grid';
+
+                // hide menu items based on role
+                const findJobsLink = document.querySelector('a[href="findjobs.html"]').parentElement;
+                const hireLink = document.querySelector('a[href="hire.html"]').parentElement;
+
+                if (role === 'employer') {
+                    findJobsLink.style.display = 'none';
+                } else {
+                    hireLink.style.display = 'none';
+                }
+            } else {
+                // show login prompt if not logged in
+                document.getElementById('loginPrompt').style.display = 'block';
+                // hide job listings
+                document.getElementById('jobListings').style.display = 'none';
+            }
+
+            function logout() {
+                localStorage.removeItem('token');
+                localStorage.removeItem('role');
+                localStorage.removeItem('userName');
+                window.location.href = 'login.html';
+            }
+            
+            // fetch jobs from server
+            async function fetchJobs() {
+                if (!token) return; // Don't fetch jobs if not logged in
+                
+                try {
+                    const response = await fetch('http://localhost:3001/api/jobs');
+                    const jobs = await response.json();
+                    displayJobs(jobs);
+                } catch (error) {
+                    console.error('Error fetching jobs:', error);
+                }
+            }
+
+            function displayJobs(jobs) {
+                const jobListings = document.getElementById('jobListings');
+                jobListings.innerHTML = '';
+                
+                jobs.forEach(job => {
+                    const jobCard = document.createElement('div');
+                    jobCard.className = 'job-card';
+                    jobCard.innerHTML = `
+                        <h3>${job.title}</h3>
+                        <p class="company">${job.company}</p>
+                        <p class="location"><i class="fa fa-map-marker"></i> ${job.location}</p>
+                        <p class="type"><i class="fa fa-briefcase"></i> ${job.type}</p>
+                        <p class="salary"><i class="fa fa-money"></i> ${job.salary}</p>
+                        <button onclick="applyForJob('${job._id}')">Apply Now</button>
+                    `;
+                    jobListings.appendChild(jobCard);
+                });
+            }
+
+            async function searchJobs() {
+                if (!token) {
+                    alert('Please login to view job listings');
+                    return;
+                }
+
+                const title = document.getElementById('jobTitle').value.toLowerCase();
+                const location = document.getElementById('location').value.toLowerCase();
+                const type = document.getElementById('jobType').value;
+
+                try {
+                    const response = await fetch('http://localhost:3001/api/jobs');
+                    const jobs = await response.json();
+
+                    const filteredJobs = jobs.filter(job => {
+                        return (!title || job.title.toLowerCase().includes(title)) &&
+                               (!location || job.location.toLowerCase().includes(location)) &&
+                               (!type || job.type.toLowerCase() === type);
+                    });
+
+                    displayJobs(filteredJobs);
+                } catch (error) {
+                    console.error('Error searching jobs:', error);
+                }
+            }
+
+            function applyForJob(jobId) {
+                if (!token) {
+                    alert('Please login to apply for jobs');
+                    window.location.href = 'login.html';
+                    return;
+                }
+                // show application form
+                document.getElementById('jobTitleSpan').textContent = jobId;
+                document.getElementById('applicationModal').style.display = 'block';
+            }
+
+            function closeModal() {
+                document.getElementById('applicationModal').style.display = 'none';
+            }
+
+            // handle application form submission
+            document.getElementById('applicationForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const jobId = document.getElementById('jobTitleSpan').textContent;
+                const resume = document.getElementById('resume').files[0];
+                const videoCV = document.getElementById('videoCV').files[0];
+                const coverLetter = document.getElementById('coverLetter').value;
+                const expectedSalary = document.getElementById('expectedSalary').value;
+                const phoneNumber = document.getElementById('phoneNumber').value;
+                const location = document.getElementById('applicantLocation').value;
+                const skills = document.getElementById('skills').value;
+                const experienceLevel = document.getElementById('experienceLevel').value;
+
+                // check video duration
+                if (videoCV) {
+                    const video = document.createElement('video');
+                    video.src = URL.createObjectURL(videoCV);
+                    video.onloadedmetadata = function() {
+                        if (video.duration > 60) {
+                            alert('Video must be 1 minute or less');
+                            return;
+                        }
+                    };
+                }
+
+                // Create form data
+                const formData = new FormData();
+                formData.append('jobId', jobId);
+                formData.append('resume', resume);
+                formData.append('videoCV', videoCV);
+                formData.append('coverLetter', coverLetter);
+                formData.append('expectedSalary', expectedSalary);
+                formData.append('phoneNumber', phoneNumber);
+                formData.append('location', location);
+                formData.append('skills', skills);
+                formData.append('experienceLevel', experienceLevel);
+
+                try {
+                    const response = await fetch('http://localhost:3001/api/applications', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        },
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        alert('Application submitted successfully!');
+                        closeModal();
+                    } else {
+                        alert(data.message || 'Error submitting application');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Something went wrong');
+                }
+            });
+
+            // check if user is logged in and has correct role
+            if (!token) {
+                document.getElementById('loginPrompt').style.display = 'block';
+                fetchJobs(); // fetch jobs for everyone
+            } else if (role === 'employer') {
+                // redirect employers to hire page
+                window.location.href = 'hire.html';
+            } else {
+                document.getElementById('loginPrompt').style.display = 'none';
+                fetchJobs(); // fetch jobs from server if logged in
+            }
+        </script>
+    </body>
+</html>

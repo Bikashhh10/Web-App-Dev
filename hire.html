@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hustlr - Hire</title>
+        <link rel="stylesheet" href="hire.css">
+        <link rel="stylesheet" href="home.css">
+        <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    </head>
+    <body>
+         <div class="banner">
+            <div class="topbar">
+                <div class="icons">
+                    <i class="fa fa-instagram" aria-hidden="true"></i>
+                    <i class="fa fa-facebook-square" aria-hidden="true"></i>
+                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                    <i class="fa fa-question-circle" aria-hidden="true"></i>
+                </div>
+
+                <div class="l">
+                    <ul class="list" id="authButtons">
+                        <li><a href="login.html">Login <i class="fa fa-angle-down"></i></li></a>
+                        <li><a href="signup.html">Sign Up <i class="fa fa-angle-down"></i></li></a>
+                    </ul>
+                </div>
+                <div class="anime"></div>
+                <div class="menubar">
+                    <ul class="links">
+                        <li><a href="home.html">Home</a></li>
+                        <li><a href="findjobs.html">Find Jobs</a></li>
+                        <li><a href="hire.html"><fonts>Hire</fonts></a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+        
+            
+            <!-- job posting form -->
+            <div class="container" id="postJob">
+                <div id="loginRequired" style="display: none;">
+                    <h2>Want to Post a Job?</h2>
+                    <p>You need to be logged in as an employer to post jobs.</p>
+                    <div class="auth-buttons">
+                        <a href="login.html" class="btn">Login</a>
+                        <a href="signup.html" class="btn">Sign Up as Employer</a>
+                    </div>
+                </div>
+
+                <div id="jobFormContainer" style="display: none;">
+                    <h2>Post a New Job</h2>
+                    <form id="jobForm">
+                        <div class="form-group">
+                            <label for="title">Job Title:</label>
+                            <input type="text" id="title" name="title" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="company">Company Name:</label>
+                            <input type="text" id="company" name="company" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="location">Location:</label>
+                            <input type="text" id="location" name="location" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="type">Job Type:</label>
+                            <select id="type" name="type" required>
+                                <option value="">Select Type</option>
+                                <option value="full-time">Full Time</option>
+                                <option value="part-time">Part Time</option>
+                                <option value="contract">Contract</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="salary">Salary:</label>
+                            <input type="text" id="salary" name="salary" placeholder="e.g., $50,000 - $60,000" required>
+                        </div>
+
+                        <button type="submit">Post Job</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- employer dashboard -->
+            <div class="container" id="employerDashboard" style="display: none;">
+                <h2>Your Posted Jobs</h2>
+                <div class="dashboard-content">
+                    <div class="jobs-list" id="postedJobs">
+                        <!-- Posted jobs will be listed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // check if user is logged in and is an employer
+            const token = localStorage.getItem('token');
+            const role = localStorage.getItem('role');
+            const userId = localStorage.getItem('userId');
+            const userName = localStorage.getItem('userName');
+            
+            // update UI for logged in user
+            if (token) {
+                const authButtons = document.getElementById('authButtons');
+                const firstName = userName.split(' ')[0]; // get just the first name
+                authButtons.innerHTML = `
+                    <li><a href="#" onclick="logout()"><i class="fa fa-user-circle" aria-hidden="true"></i> ${firstName} | Logout</a></li>
+                `;
+
+                // hide/show menu items based on role
+                const findJobsLink = document.querySelector('a[href="findjobs.html"]').parentElement;
+                const hireLink = document.querySelector('a[href="hire.html"]').parentElement;
+
+                if (role === 'employer') {
+                    findJobsLink.style.display = 'none';
+                    document.getElementById('jobFormContainer').style.display = 'block';
+                    document.getElementById('employerDashboard').style.display = 'block';
+                    fetchPostedJobs(); // fetch jobs posted by this employer
+                } else {
+                    hireLink.style.display = 'none';
+                    window.location.href = 'findjobs.html';
+                }
+            } else {
+                document.getElementById('loginRequired').style.display = 'block';
+            }
+
+            function logout() {
+                localStorage.removeItem('token');
+                localStorage.removeItem('role');
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userId');
+                window.location.href = 'login.html';
+            }
+
+            // fetch jobs posted by this employer
+            async function fetchPostedJobs() {
+                try {
+                    const response = await fetch('http://localhost:3001/api/jobs/employer', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const jobs = await response.json();
+                    displayPostedJobs(jobs);
+                } catch (error) {
+                    console.error('Error fetching posted jobs:', error);
+                }
+            }
+
+            // display posted jobs
+            function displayPostedJobs(jobs) {
+                const jobsList = document.getElementById('postedJobs');
+                jobsList.innerHTML = '';
+
+                jobs.forEach(job => {
+                    const jobCard = document.createElement('div');
+                    jobCard.className = 'job-card';
+                    jobCard.innerHTML = `
+                        <h3>${job.title}</h3>
+                        <p class="company">${job.company}</p>
+                        <p class="location"><i class="fa fa-map-marker"></i> ${job.location}</p>
+                        <p class="type"><i class="fa fa-briefcase"></i> ${job.type}</p>
+                        <p class="salary"><i class="fa fa-money"></i> ${job.salary}</p>
+                        <button onclick="viewApplications('${job._id}')">View Applications</button>
+                    `;
+                    jobsList.appendChild(jobCard);
+                });
+            }
+
+            // handle form submission
+            document.getElementById('jobForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                // Check if user is logged in and is an employer
+                if (!token) {
+                    alert('Please login as an employer to post jobs');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                if (role !== 'employer') {
+                    alert('Only employers can post jobs');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // get form data
+                const jobData = {
+                    title: document.getElementById('title').value,
+                    company: document.getElementById('company').value,
+                    location: document.getElementById('location').value,
+                    type: document.getElementById('type').value,
+                    salary: document.getElementById('salary').value
+                };
+
+                try {
+                    // send data to server
+                    const response = await fetch('http://localhost:3001/api/jobs', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(jobData)
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        alert('Job posted successfully!');
+                        document.getElementById('jobForm').reset();
+                        fetchPostedJobs(); // refresh the jobs list
+                    } else {
+                        alert(data.message || 'Error posting job');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Something went wrong');
+                }
+            });
+
+            function viewApplications(jobId) {
+                const token = localStorage.getItem('token');
+                
+                fetch(`http://localhost:3001/api/applications/job/${jobId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => response.json())
+                .then(applications => {
+                    // Create modal to display applications
+                    const modal = document.createElement('div');
+                    modal.className = 'modal';
+                    modal.style.display = 'block';
+                    
+                    let applicationsHtml = '<div class="modal-content"><span class="close" onclick="this.parentElement.parentElement.remove()">&times;</span>';
+                    applicationsHtml += '<h2>Applications</h2>';
+                    
+                    if (applications.length === 0) {
+                        applicationsHtml += '<p>No applications yet</p>';
+                    } else {
+                        applications.forEach(app => {
+                            applicationsHtml += `
+                                <div class="application-card">
+                                    <h3>${app.applicantId.firstName} ${app.applicantId.lastName}</h3>
+                                    <p>Email: ${app.applicantId.email}</p>
+                                    <p>Status: ${app.status}</p>
+                                    <a href="http://localhost:3001/${app.resume}" target="_blank">View Resume</a>
+                                    <a href="http://localhost:3001/${app.videoCV}" target="_blank" class="view-video">View Video</a>
+                                </div>
+                            `;
+                        });
+                    }
+                    
+                    applicationsHtml += '</div>';
+                    modal.innerHTML = applicationsHtml;
+                    document.body.appendChild(modal);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error fetching applications');
+                });
+            }
+        </script>
+    </body>
+</html>

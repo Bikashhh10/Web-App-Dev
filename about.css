@@ -1,0 +1,71 @@
+.content{
+    width: 60%;
+    position: absolute;
+    
+    top: 125px;
+   
+    text-align: center;
+    color: white;
+    margin-left: 20%;
+    
+ }
+
+ .content h2{
+    font-size: 70px;
+     margin-top: 20px; 
+
+ }
+
+ .content p{
+    margin: 20px auto;
+    font-weight: 100;
+    font-size: 30px;
+    text-align: justify;
+ }
+
+ button{
+    width: 150px;
+    padding: 15px 0;
+    text-align: center;
+    margin: 20px 10px;
+    border-radius: 25px;
+    font-weight: bold;
+    border: 2px solid grey;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+ }
+
+ button span{
+    background-color: grey;
+    height: 100%;
+    width: 0;
+    border-radius: 25px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    transition: 0.5s;
+}
+
+button:hover span{
+    width: 100%;
+}
+
+button:hover{
+    border:none
+}
+
+.more{
+    display: none;
+}
+
+.text.showmore .more{
+    display: inline;
+}
+ 
+.text.showmore .dots{
+    display: none;
+}

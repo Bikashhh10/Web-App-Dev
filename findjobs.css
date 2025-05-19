@@ -1,0 +1,306 @@
+/* style for the job search page */
+.container {
+    background-color: none;
+    width: 90%;
+    height: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 10px;
+    display: block;
+    justify-content: space-evenly;
+    padding-top: 15%;
+}
+
+/* login prompt styles */
+.login-prompt {
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: white;
+}
+
+.login-prompt p {
+    color: #ddd;
+    margin: 0;
+}
+
+.login-prompt .btn {
+    display: inline-block;
+    padding: 8px 16px;
+    margin: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #333;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.login-prompt .btn:hover {
+    background-color: white;
+}
+
+/* modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: rgba(128, 128, 128, 0.95);
+    margin: 5% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 8px;
+    max-height: 90vh;
+    overflow-y: auto;
+    color: #333;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.modal-content h2 {
+    color: #333;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 25px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #ddd;
+}
+
+/* form styles */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 16px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="tel"],
+.form-group input[type="file"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.form-group textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.form-group small {
+    display: block;
+    color: #ddd;
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+/* Search section */
+.search-section {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.search-box input,
+.search-box select {
+    flex: 1;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.search-box button {
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-box button:hover {
+    background-color: white;
+}
+
+/* Job listings */
+.job-listings {
+    display: grid;
+    gap: 20px;
+}
+
+.job-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    color: white;
+}
+
+.job-card h3 {
+    color: white;
+    margin-bottom: 10px;
+}
+
+.job-card .company {
+    color: #ddd;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.job-card .location,
+.job-card .type,
+.job-card .salary {
+    color: #ddd;
+    margin-bottom: 5px;
+}
+
+.job-card .description {
+    margin: 15px 0;
+    color: #555;
+}
+
+.job-card button {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #333;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.job-card button:hover {
+    background-color: white;
+}
+
+h2{
+    color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 25px;
+    text-align: center;
+}
+.submit{
+    font-size: 25px;    
+}
+
+form {
+    display: grid;
+    gap: 0.25em 1em;
+    color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 15px;
+    text-align: center;
+}
+
+form input:invalid {
+    border-width: 0.5px 0.5px 0.5px 3px;
+    border-left-style: solid;
+    border-left-color: red;
+}
+
+form input:valid {
+    border-width: 0.5px 0.5px 0.5px 3px;
+    border-left-style: solid;
+    border-left-color: green;
+}
+
+form:invalid {
+    border: 3px solid red;
+}
+
+form:valid {
+    border: 3px solid rgb(80, 239, 80);
+}
+
+form > input {
+    min-width: 0;
+    font-size: 0.9em;
+    padding: 0.50em;
+}
+
+form > label {
+    text-align: right;
+}
+
+form > input {
+    min-width: 0;
+}
+
+h2 {
+    text-align: center
+}
+
+.submit-btn {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #333;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: white;
+}
+
+.card{
+    background-color: none;
+    display:grid;
+    grid-template-columns:max-content 2fr;
+    margin: 10px;
+}
+
+

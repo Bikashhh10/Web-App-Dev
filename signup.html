@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hustlr</title>
+        <link rel="stylesheet" href="signup.css">
+        <link rel="stylesheet" href="home.css">
+        <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    </head>
+    <body>
+         <div class="banner">
+            <div class="topbar">
+                <div class="icons">
+                    <i class="fa fa-instagram" aria-hidden="true"></i>
+                    <i class="fa fa-facebook-square" aria-hidden="true"></i>
+                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                    <i class="fa fa-question-circle" aria-hidden="true"></i>
+                </div>
+
+                <div class="l">
+                    <ul class="list">
+                        <li><a href="login.html">Login</a> <i class="fa fa-angle-down"></i></li>
+                        <li><a href="signup.html"><fonts>Sign Up </fonts></a><i class="fa fa-angle-down"></i></li>
+                       
+                    </ul>
+                </div>
+                <div class="anime">
+
+                </div>
+                <div class="menubar">
+                    <ul class="links">
+                        <li><a href="home.html">Home</a></li>
+                        <li><a href="findjobs.html">Find Jobs</a></li>
+                        <li><a href="hire.html">Hire</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+
+
+                </div>
+            </div>
+            <div class="container" id="Signup">
+                <form id="signupForm" action="http://localhost:3001/api/signup" method="POST">
+                    <h2>Sign Up</h2>
+                    <div class="card">
+                        <label for="first">First Name: </label>
+                        <input id="firstName" name="firstName" placeholder="enter your First name" required>
+                    </div>
+                    <div class="card">
+                        <label for="last">Last Name: </label>
+                        <input id="lastName" name="lastName" placeholder="enter your Last name" required>
+                    </div>
+                    <div class="card">
+                        <label for="email">Email Address: </label>
+                        <input id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="card">
+                        <label for="phone">Phone Number: </label>
+                        <input id="phone" name="phone" placeholder="enter your Phone Number" required>
+                    </div>
+                    <div class="card">
+                        <label for="dob">Date of Birth</label>
+                        <input id="dob" type="date" name="dob" required>
+                    </div>
+                    <div class="card">
+                        <label for="password">Password: </label>
+                        <input id="password" type="password" name="password" placeholder="enter your password" minlength="8" required>
+                    </div>
+                    <div class="card">
+                        <label for="confirmPassword">Confirm password: </label>
+                        <input id="confirmPassword" type="password" name="confirmPassword" placeholder="confirm password" required>
+                    </div>
+                    <div class="card">
+                        <label for="role">Role:</label>
+                        <select id="role" name="role">
+                            <option value="jobseeker">Job Seeker</option>
+                            <option value="employer">Employer</option>
+                        </select>
+                    </div>
+                    <div class="card">
+                        <input class="submit" type="submit" value="Sign Up">
+                    </div>
+                </form>
+                
+                  
+                
+            </div>
+            
+
+            
+        
+        
+        </div>
+        
+        <script>
+            document.getElementById('signupForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const formData = {
+                    firstName: document.getElementById('firstName').value,
+                    lastName: document.getElementById('lastName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    dateOfBirth: document.getElementById('dob').value,
+                    password: document.getElementById('password').value,
+                    role: document.getElementById('role').value
+                };
+
+                try {
+                    const response = await fetch('http://localhost:3001/api/signup', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    });
+
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        localStorage.setItem('userName', `${data.firstName} ${data.lastName}`);
+                        localStorage.setItem('role', data.role);
+                        
+                        if (data.role === 'employer') {
+                            window.location.href = 'hire.html';
+                        } else {
+                            window.location.href = 'findjobs.html';
+                        }
+                    } else {
+                        alert(data.message || 'Signup failed');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred during signup');
+                }
+            });
+        </script>
+
+          
+          
+          
+          
+        
+          
+    </body>
+</html>

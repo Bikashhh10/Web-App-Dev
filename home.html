@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hustlr</title>
+        <link rel="stylesheet" href="home.css">
+        <link rel="stylesheet" href="home1.css">
+        <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    </head>
+    <body>
+         <div class="banner">
+            <div class="topbar">
+                <div class="icons">
+                    <i class="fa fa-instagram" aria-hidden="true"></i>
+                    <i class="fa fa-facebook-square" aria-hidden="true"></i>
+                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                    <i class="fa fa-question-circle" aria-hidden="true"></i>
+                </div>
+
+                <div class="l">
+                    <ul class="list" id="authButtons">
+                        <li><a href="login.html">Login <i class="fa fa-angle-down"></i></a></li>
+                        <li><a href="signup.html">Sign Up <i class="fa fa-angle-down"></i></a></li>
+                    </ul>
+                </div>
+                <div class="anime">
+                </div>
+                <div class="menubar">
+                    <ul class="links">
+                        <li><a href="home.html"><fonts>Home</fonts></a></li>
+                        <li><a href="findjobs.html">Find Jobs</a></li>
+                        <li><a href="hire.html">Hire</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+         </div>
+        
+         <div class="content">
+            <h2>Hustlr</h2>
+            <p class="text">
+                Hustlr is a platform designed to connect job seekers with employers, making hiring and job hunting faster and more efficient. Finding the right opportunity or candidate can be challenging, but Hustlr simplifies the process with smart job matching, real-time applications, and seamless communication between employers and applicants.
+                <span class="dots">...</span><span class="more">Explore our website to discover exciting job opportunities and connect with top talent effortlessly.</span>
+            </p>
+            <div>
+                <button type="button" class="readmorebtn"><span></span>Read More</button>
+            </div>
+        </div>
+
+        <script>
+            // Check authentication status
+            const token = localStorage.getItem('token');
+            const role = localStorage.getItem('role');
+            const userName = localStorage.getItem('userName');
+
+            if (token) {
+                // Update UI for logged in user
+                const authButtons = document.getElementById('authButtons');
+                authButtons.innerHTML = `
+                    <li><a href="#" onclick="logout()">Welcome, ${userName}</a></li>
+                `;
+
+                // Hide/show menu items based on role
+                const findJobsLink = document.querySelector('a[href="findjobs.html"]').parentElement;
+                const hireLink = document.querySelector('a[href="hire.html"]').parentElement;
+
+                if (role === 'employer') {
+                    findJobsLink.style.display = 'none';
+                } else {
+                    hireLink.style.display = 'none';
+                }
+            }
+
+            function logout() {
+                localStorage.removeItem('token');
+                localStorage.removeItem('role');
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userId');
+                window.location.href = 'login.html';
+            }
+        </script>
+        <script src="home.js"></script>
+    </body>
+</html>
